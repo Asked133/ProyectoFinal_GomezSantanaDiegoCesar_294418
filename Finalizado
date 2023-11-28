@@ -191,7 +191,7 @@ namespace Proyecto
             string[] nuevoPersonaje = { NombrePersonaje + "\nNivel:" + NivelPersonaje.ToString() };
 
             File.AppendAllLines(RutaArchivo, new[] { string.Join(",", nuevoPersonaje) });
-            Console.WriteLine("Su personaje fue debidamente modificado");
+            Console.WriteLine("Su personaje fue perfectamente modificado");
         
     }
             static void EliminarPersonaje()
