@@ -1,0 +1,211 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace Proyecto
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Menu");
+            Console.WriteLine("1. Tirador de dados");
+            Console.WriteLine("2. Busca encuentros");
+            int menu = int.Parse(Console.ReadLine());
+            switch (menu)
+            {
+                case 1:
+                    Console.Clear();
+                    Console.WriteLine("TiraDados");
+                    Console.WriteLine("Selecciona una opcion");
+                    Console.WriteLine("1. Tira un dado sin repeticiones.");
+                    Console.WriteLine("2. Tira un dado con 1 o mas repeticiones.");
+                    int opcion = int.Parse(Console.ReadLine());
+                    int opcionDado = 0;
+                    //d4, d6, d8, d10, d12, d20, d100
+                    switch (opcion)
+                    {
+                        //caso 1 son dados sin repeticion
+                        case 1:
+                            Console.Clear();
+
+                            Console.WriteLine("Que tipo de dado quieres tirar?");
+                            Console.WriteLine("1. D4");
+                            Console.WriteLine("2. D6");
+                            Console.WriteLine("3. D8");
+                            Console.WriteLine("4. D10");
+                            Console.WriteLine("5. D12");
+                            Console.WriteLine("6. D20");
+                            Console.WriteLine("7. D100");
+                            opcionDado = int.Parse(Console.ReadLine());
+                            Console.Clear();
+                            Console.WriteLine($"Elegiste la opcion {opcionDado}");
+                            Console.WriteLine($"El dado cayo: {Dados(opcionDado)}");
+                            break;
+                        //caso 2 son dados con repeticion
+                        case 2:
+                            Console.Clear();
+                            Console.WriteLine("Que tipo de dado quieres tirar?");
+                            Console.WriteLine("1. D4");
+                            Console.WriteLine("2. D6");
+                            Console.WriteLine("3. D8");
+                            Console.WriteLine("4. D10");
+                            Console.WriteLine("5. D12");
+                            Console.WriteLine("6. D20");
+                            Console.WriteLine("7. D100");
+                            opcionDado = int.Parse(Console.ReadLine());
+                            Console.Clear();
+                            Console.WriteLine("Que cantidad de veces quieres tirarlos?");
+                            int cantVeces = int.Parse(Console.ReadLine());
+                            Console.Clear();
+                            Console.WriteLine($"Elegiste la opcion {opcionDado}");
+                            Console.WriteLine($"Los dados se tiraran {cantVeces} veces");
+                            // bucle para iterar la n cantidad de veces que diga el usuario que quiere
+
+                            //tirar los dados
+                            for (int i = 0; i < cantVeces; i++)
+                            {
+                                Console.WriteLine($"Tirada {i + 1} el dado cayo: {Dados(opcionDado)}");
+                            }
+                            break;
+                    }
+                    break;
+                case 2:
+                    Console.Clear();
+                    while (true)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Seleccione una opción:");
+                        Console.WriteLine("1. Crear personaje");
+                        Console.WriteLine("2. Mostrar personajes");
+                        Console.WriteLine("2. Modificar personaje");
+                        Console.WriteLine("3. Eliminar personaje");
+                        Console.WriteLine("4. Salir");
+
+                        string option = Console.ReadLine();
+
+                        switch (option)
+                        {
+                            case "1":
+                                CrearPersonaje();
+                                break;
+                            case "2":
+                                MostrarPersonaje();
+                                break;
+                            case "3":
+                                ModificarPersonajes();
+                                break;
+                            case "4":
+                                EliminarPersonaje();
+                                break;
+                            case "5":
+                                Environment.Exit(0);
+                                break;
+                            default:
+                                Console.WriteLine("Opción no válida.");
+                                break;
+
+                        }
+                    }
+            }
+        }
+        static Random dado = new Random(); //Crea un solo dado para todas las tiradas.
+        static int Dados(int caras) // funcion para tirar dados
+        {
+            int dadoTirado = 0;
+            switch (caras)
+
+            {
+                case 1:
+                    dadoTirado = dado.Next(1, 5);
+                    break;
+                case 2:
+                    dadoTirado = dado.Next(1, 6);
+                    break;
+                case 3:
+                    dadoTirado = dado.Next(1, 9);
+                    break;
+                case 4:
+                    dadoTirado = dado.Next(1, 11);
+                    break;
+                case 5:
+                    dadoTirado = dado.Next(1, 13);
+                    break;
+                case 6:
+                    dadoTirado = dado.Next(1, 21);
+                    break;
+                case 7:
+                    dadoTirado = dado.Next(1, 101);
+                    break;
+            }
+            return dadoTirado;
+        }
+        //Todo el CRUD
+        static void CrearPersonaje()
+        {
+            Console.Clear();
+            Console.WriteLine("Cada nuevo personaje creado debe tener un docuemnto de texto distinto por lo cual una ruta distinta");
+            Console.WriteLine("Ingrese la ruta donde va a guardar al personaje");
+            string RutaArchivo = Console.ReadLine();
+            Console.WriteLine("Ingrese el nombre del Personaje:");
+            string NombrePersonaje = Console.ReadLine();
+
+            Console.WriteLine("Ingrese el nivel del personaje:");
+            int NivelPersonaje = int.Parse(Console.ReadLine());
+
+            string[] nuevoPersonaje = { NombrePersonaje + "\nNivel:" + NivelPersonaje.ToString() };
+
+            File.AppendAllLines(RutaArchivo, new[] { string.Join(",", nuevoPersonaje) });
+            Console.WriteLine("Su personaje fue debidamente creado");
+        }
+        static void MostrarPersonaje()
+        {
+            Console.Clear();
+            Console.WriteLine("Ingrese la ruta de su archivo");
+            string RutaArchivo = Console.ReadLine();
+            if (File.Exists(RutaArchivo))
+            {
+                string contenido = File.ReadAllText(RutaArchivo);
+                Console.WriteLine(contenido);
+            }
+            else
+            {
+                Console.WriteLine("No hay personaje registrado.");
+                return;
+            }
+        }
+        static void ModificarPersonajes()
+        {
+            Console.Clear();
+            Console.WriteLine("Ingrese la ruta donde esta el  personaje guardado");
+            string RutaArchivo = Console.ReadLine();
+            Console.WriteLine("Ingrese el nuevo nombre del Personaje:");
+            string NombrePersonaje = Console.ReadLine();
+
+            Console.WriteLine("Ingrese el nuevo nivel del personaje:");
+            int NivelPersonaje = int.Parse(Console.ReadLine());
+
+            string[] nuevoPersonaje = { NombrePersonaje + "\nNivel:" + NivelPersonaje.ToString() };
+
+            File.AppendAllLines(RutaArchivo, new[] { string.Join(",", nuevoPersonaje) });
+            Console.WriteLine("Su personaje fue debidamente modificado");
+        
+    }
+            static void EliminarPersonaje()
+        {
+            Console.WriteLine("Ingrese la ruta del personaje a eliminar");
+            string RutaArchivo = Console.ReadLine();
+            if (File.Exists(RutaArchivo)) {
+                File.Delete(RutaArchivo);
+                Console.WriteLine("Su personaje fue debidamente eliminado");
+                
+            } else
+            {
+                Console.WriteLine("No se encontro el archivo");
+            } return;
+        }
+    }
+}
